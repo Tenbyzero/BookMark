@@ -1,0 +1,242 @@
+:root {
+    --primary: #6366f1;
+    --secondary: #10b981;
+    --background: #ffffff;
+    --text: #1f2937;
+    --glass: rgba(255, 255, 255, 0.9);
+    --border-color: #e5e7eb;
+    --shadow-sm: 0 2px 2px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --hover-bg: rgba(99, 102, 241, 0.1);
+    --focus-ring: 0 0 0 3px var(--primary);
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-md-lg: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+}
+[data-theme="dark"] {
+    --background: #000000;
+    --text: #f8fafc;
+    --glass: rgba(0, 0, 0, 0.8);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --hover-bg: rgba(99, 102, 241, 0.2);
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+body {
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+    padding: var(--spacing-lg);
+    background-image: radial-gradient(circle at 1px 1px,
+            rgba(0, 0, 0, 0.05) 1px,
+            transparent 0);
+    background-size: 40px 40px;
+    line-height: 1.5;
+}
+[data-theme="dark"] body {
+    background-image: radial-gradient(circle at 1px 1px,
+            rgba(255, 255, 255, 0.03) 1px,
+            transparent 0);
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    z-index: 100;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+}
+.logout-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    z-index: 100;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+}
+.theme-toggle:hover,
+.logout-button:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-sm), 0 0 10px var(--primary);
+}
+.theme-toggle:focus,
+.logout-button:focus {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+#auth-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.auth-box {
+    background: var(--background);
+    padding: var(--spacing-lg);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    position: relative;
+}
+#login-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md-lg);
+}
+#login-form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--glass);
+    color: var(--text);
+}
+#login-form input:focus {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+#login-form button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: var(--spacing-md);
+}
+#login-form button[type="submit"]:focus {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+#login-error {
+    color: #ef4444;
+    margin-top: var(--spacing-md);
+    display: none;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+h1 {
+    text-align: center;
+    margin: var(--spacing-lg) 0;
+    font-size: clamp(2rem, 5vw, 3rem);
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-fill-color: transparent;
+    filter: drop-shadow(var(--shadow-sm));
+    line-height: 1.2;
+    text-shadow: 0 0 5px rgba(99, 102, 241, 0.5);
+}
+.category {
+    margin: var(--spacing-xl) 0;
+    padding: var(--spacing-lg);
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+}
+.bookmark-list {
+    display: grid;
+    gap: var(--spacing-md);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.bookmark-item {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-md-lg);
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text);
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.bookmark-item:hover {
+    transform: translateY(-3px);
+    background: var(--hover-bg);
+    box-shadow: var(--shadow-md), 0 0 15px var(--primary);
+}
+.bookmark-item:focus {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+.bookmark-item i {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin-right: var(--spacing-md);
+    font-size: 1.2rem;
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+@media (max-width: 768px) {
+    body {
+        padding: var(--spacing-md);
+    }
+    .category {
+        padding: var(--spacing-md-lg);
+        margin: var(--spacing-lg) 0;
+    }
+    .bookmark-list {
+        grid-template-columns: 1fr;
+    }
+}
+.hexagon {
+clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+background: var(--background);
+width: 100px;
+height: 115px; /* Height adjusted for hexagon proportion */
+}

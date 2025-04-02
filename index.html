@@ -2,683 +2,396 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bookmarks</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --secondary: #10b981;
-            --background: #ffffff;
-            --text: #1f2937;
-            --glass: rgba(255, 255, 255, 0.9);
-            --border-color: #e5e7eb;
-            --shadow-sm: 0 2px 2px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
-            --hover-bg: rgba(99, 102, 241, 0.1);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bookmarks</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 
-        [data-theme="dark"] {
-            --background: #000000;
-            --text: #f8fafc;
-            --glass: rgba(0, 0, 0, 0.8);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --hover-bg: rgba(99, 102, 241, 0.2);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-        }
-
-        body {
-            background: var(--background);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 2rem;
-            background-image: radial-gradient(circle at 1px 1px,
-                    rgba(0, 0, 0, 0.05) 1px,
-                    transparent 0);
-            background-size: 40px 40px;
-            line-height: 1.5;
-        }
-
-        [data-theme="dark"] body {
-            background-image: radial-gradient(circle at 1px 1px,
-                    rgba(255, 255, 255, 0.03) 1px,
-                    transparent 0);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: var(--shadow-sm);
-            z-index: 100;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-        }
-
-        .logout-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: var(--shadow-sm);
-            z-index: 100;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-        }
-
-        .theme-toggle:hover,
-        .logout-button:hover {
-            transform: scale(1.05);
-        }
-
-        #auth-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .auth-box {
-            background: var(--background);
-            padding: 2rem;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border-color);
-            position: relative;
-        }
-
-        #login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        #login-form input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: var(--glass);
-            color: var(--text);
-        }
-
-        #login-form button[type="submit"] {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 1rem;
-        }
-
-        #login-error {
-            color: #ef4444;
-            margin-top: 1rem;
-            display: none;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        h1 {
-            text-align: center;
-            margin: 2rem 0;
-            font-size: clamp(2rem, 5vw, 3rem);
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-fill-color: transparent;
-            filter: drop-shadow(var(--shadow-sm));
-            line-height: 1.2;
-        }
-
-        .category {
-            margin: 3rem 0;
-            padding: 2rem;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .bookmark-list {
-            display: grid;
-            gap: 1rem;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        }
-
-        .bookmark-item {
-            display: flex;
-            align-items: center;
-            padding: 1.5rem;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            text-decoration: none;
-            color: var(--text);
-            border: 1px solid var(--border-color);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .bookmark-item:hover {
-            transform: translateY(-3px);
-            background: var(--hover-bg);
-            box-shadow: var(--shadow-md);
-        }
-
-        .bookmark-item i {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            margin-right: 1rem;
-            font-size: 1.2rem;
-            border: 1px solid var(--border-color);
-            flex-shrink: 0;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-
-            .category {
-                padding: 1.5rem;
-                margin: 2rem 0;
-            }
-
-            .bookmark-list {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z'/></svg>">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z'/></svg>">
 </head>
 
 <body>
-    <!-- Login Container -->
-    <div id="auth-container">
-        <div class="auth-box">
-            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-            <h2><i class="fas fa-lock"></i> Secure Access</h2>
-            <form id="login-form">
-                <input type="text" id="username" placeholder="Username" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <button type="submit">Login</button>
-                <p id="login-error"><i class="fas fa-exclamation-circle"></i> Invalid credentials</p>
-            </form>
+  <!-- Login Container -->
+  <div id="auth-container">
+    <div class="auth-box">
+      <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+      <h2><i class="fas fa-lock"></i> Secure Access</h2>
+      <form id="login-form">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+        <p id="login-error"><i class="fas fa-exclamation-circle"></i> Invalid credentials</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container" id="content-container" style="display: none;">
+    <button class="logout-button" onclick="handleLogout()">
+      <i class="fas fa-sign-out-alt"></i>
+    </button>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+    <h1>Bookmarks</h1>
+
+    <div class="category">
+      <h2><i class="fas fa-share-alt"></i> Social Networks</h2>
+      <div class="bookmark-list">
+        <a href="https://www.youtube.com/" target="_blank" class="bookmark-item">
+          <i class="fab fa-youtube"></i>
+          YouTube
+        </a>
+        <a href="https://www.facebook.com/" target="_blank" class="bookmark-item">
+          <i class="fab fa-facebook"></i>
+          Facebook
+        </a>
+        <a href="https://x.com/home" target="_blank" class="bookmark-item">
+          <i class="fab fa-twitter"></i>
+          Twitter/X
+        </a>
+        <a href="https://www.linkedin.com/feed/" target="_blank" class="bookmark-item">
+          <i class="fab fa-linkedin"></i>
+          LinkedIn
+        </a>
+        <a href="https://www.instagram.com/" target="_blank" class="bookmark-item">
+          <i class="fab fa-instagram"></i>
+          Instagram
+        </a>
+        <a href="https://www.threads.net/" target="_blank" class="bookmark-item">
+          <i class="fas fa-comment"></i>
+          Threads
+        </a>
+        <a href="https://www.snapchat.com/" target="_blank" class="bookmark-item">
+          <i class="fab fa-snapchat"></i>
+          Snapchat
+        </a>
+        <a href="https://www.pinterest.com/" target="_blank" class="bookmark-item">
+          <i class="fab fa-pinterest"></i>
+          Pinterest
+        </a>
+        <a href="https://github.com/" target="_blank" class="bookmark-item">
+          <i class="fab fa-github"></i>
+          Github
+        </a>
+      </div>
+    </div>
+    <div class="category">
+      <h2><i class="fas fa-chart-line"></i> Trading Platforms</h2>
+      <div class="bookmark-list">
+        <a href="https://www.tradingview.com/" target="_blank" class="bookmark-item">
+          <i class="fas fa-chart-line"></i>
+          TradingView
+        </a>
+        <a href="https://www.tickertape.in/" target="_blank" class="bookmark-item">
+          <i class="fas fa-scroll"></i>
+          Tickertape
+        </a>
+        <a href="https://trendlyne.com/features/" target="_blank" class="bookmark-item">
+          <i class="fas fa-chart-line"></i>
+          Trendlyne
+        </a>
+        <a href="https://www.moneycontrol.com/" target="_blank" class="bookmark-item">
+          <i class="fas fa-money-bill-wave"></i>
+          Moneycontrol
+        </a>
+        <a href="https://chartink.com/screener/chart-link" target="_blank" class="bookmark-item">
+          <i class="fas fa-chart-area"></i>
+          Chartink
+        </a>
+        <a href="https://sensibull.com/" target="_blank" class="bookmark-item">
+          <i class="fas fa-bullseye"></i>
+          Sensibull
+        </a>
+        <a href="https://www.screener.in/" target="_blank" class="bookmark-item">
+          <i class="fas fa-search-dollar"></i>
+          Screener
+        </a>
+        <a href="https://zerodha.com/" target="_blank" class="bookmark-item">
+          <i class="fas fa-rupee-sign"></i>
+          Zerodha
+        </a>
+        <a href="https://www.upstox.com/" target="_blank" class="bookmark-item">
+          <i class="fas fa-arrow-trend-up"></i>
+          Upstox
+        </a>
+      </div>
+    </div>
+    <div class="category">
+      <h2><i class="fas fa-robot"></i> Chat Bots</h2> <!-- Changed icon -->
+      <div class="bookmark-list">
+        <!-- Alphabetized items and fixed icons -->
+        <!-- ChatGPT -->
+        <a href="https://chatgpt.com/" target="_blank" class="bookmark-item">
+          <i class="fas fa-comment"></i>
+          ChatGPT
+        </a>
+
+        <!-- Deepseek -->
+        <a href="https://chat.deepseek.com/" target="_blank" class="bookmark-item">
+          <i class="fas fa-brain"></i> <!-- Semantic AI icon -->
+          deepseek
+        </a>
+
+        <!-- Google Gemini -->
+        <a href="https://gemini.google.com/" target="_blank" class="bookmark-item">
+          <i class="fab fa-google"></i> <!-- Official Google icon -->
+          Gemini
+        </a>
+
+        <!-- Meta AI -->
+        <a href="https://www.meta.ai/" target="_blank" class="bookmark-item">
+          <i class="fab fa-meta"></i> <!-- Official Meta icon -->
+          Meta AI
+        </a>
+
+        <!-- Grok -->
+        <a href="https://x.com/i/grok" target="_blank" class="bookmark-item">
+          <i class="fas fa-robot"></i> <!-- Generic AI icon -->
+          Grok
+        </a>
+
+        <!-- QwenLM -->
+        <a href="https://chat.qwenlm.ai/" target="_blank" class="bookmark-item">
+          <i class="fas fa-microchip"></i> <!-- Represents LLM -->
+          QwenLM
+        </a>
+
+        <!-- Perplexity -->
+        <a href="https://www.perplexity.ai/" target="_blank" class="bookmark-item">
+          <i class="fas fa-question-circle"></i> <!-- Question mark -->
+          Perplexity
+        </a>
+
+        <!-- Microsoft Copilot -->
+        <a href="https://copilot.microsoft.com/" target="_blank" class="bookmark-item">
+          <i class="fas fa-rocket"></i> <!-- Launch/assistance icon -->
+          Copilot
+        </a>
+
+        <!-- GitHub Copilot -->
+        <a href="https://github.com/copilot" target="_blank" class="bookmark-item">
+          <i class="fab fa-github"></i> <!-- Official GitHub icon -->
+          GitHub Copilot
+        </a>
+
+        <!-- Leo AI -->
+        <a href="https://app.getleo.ai/" target="_blank" class="bookmark-item">
+          <i class="fas fa-paw"></i> <!-- Leo = lion paw -->
+          Leo
+        </a>
+
+        <!-- Toolify -->
+        <a href="https://www.toolify.ai/" target="_blank" class="bookmark-item">
+          <i class="fas fa-tools"></i> <!-- Tools icon -->
+          Toolify
+        </a>
+
+        <!-- Google AI Studio -->
+        <a href="https://aistudio.google.com" target="_blank" class="bookmark-item">
+          <i class="fas fa-flask"></i> <!-- Experimentation icon -->
+          AI Studio
+        </a>
+      </div>
+    </div>
+    <div class="category">
+      <h2><i class="fas fa-globe"></i> AI Websites & Tools</h2>
+      <div class="bookmark-list">
+        <!-- AI UI Generation -->
+        <a href="https://v0.dev/" target="_blank" class="bookmark-item">
+          <i class="fas fa-wand-magic-sparkles"></i> <!-- More specific magic wand -->
+          V0 (AI UI Generator)
+        </a>
+
+        <!-- Coding -->
+        <a href="https://replit.com/" target="_blank" class="bookmark-item">
+          <i class="fas fa-laptop-code"></i> <!-- Direct coding representation -->
+          Replit (AI Coding)
+        </a>
+
+        <!-- Art Generation -->
+        <a href="https://www.midjourney.com/" target="_blank" target="_blank" class="bookmark-item">
+          <i class="fas fa-paint-brush"></i>
+          Midjourney (AI Art)
+        </a>
+
+        <!-- Video Tools -->
+        <a href="https://runwayml.com/" target="_blank" class="bookmark-item">
+          <i class="fas fa-video"></i> <!-- Clear video symbol -->
+          Runway (AI Video)
+        </a>
+
+        <!-- Image Creation -->
+        <a href="https://www.bing.com/create" target="_blank" class="bookmark-item">
+          <i class="fas fa-images"></i> <!-- Multiple images -->
+          Bing Image Creator
+        </a>
+
+        <!-- AI Platform -->
+        <a href="https://leonardo.ai/" target="_blank" target="_blank" class="bookmark-item">
+          <i class="fas fa-robot"></i>
+          Leonardo AI
+        </a>
+
+        <!-- Photo Editing -->
+        <a href="https://www.photoroom.com/ai" target="_blank" class="bookmark-item">
+          <i class="fas fa-camera-retro"></i> <!-- Camera + retro = editing -->
+          PhotoRoom AI
+        </a>
+
+        <!-- Design Tools -->
+        <a href="https://www.canva.com/" target="_blank" class="bookmark-item">
+          <i class="fas fa-swatchbook"></i> <!-- Color swatches -->
+          Canva AI Tools
+        </a>
+      </div>
+    </div>
+    <div class="category">
+      <h2><i class="fas fa-music"></i> AI Audio Tools</h2>
+      <div class="bookmark-list">
+        <!-- Text-to-Speech Section -->
+        <div class="subcategory">
+          <h3><i class="fas fa-comment"></i> Text-to-Speech</h3>
+          <a href="https://elevenlabs.io/" target="_blank" class="bookmark-item">
+            <i class="fas fa-robot"></i>
+            ElevenLabs
+          </a>
+          <a href="https://play.ht/" target="_blank" class="bookmark-item">
+            <i class="fas fa-headphones"></i>
+            PlayHT
+          </a>
+          <a href="https://www.resemble.ai/" target="_blank" class="bookmark-item">
+            <i class="fas fa-microphone-alt"></i> <!-- Voice recording icon -->
+            Resemble AI
+          </a>
         </div>
+
+        <!-- Music Generation Section -->
+        <div class="subcategory">
+          <h3><i class="fas fa-music"></i> Music Generation</h3>
+          <a href="https://suno.com/" target="_blank" class="bookmark-item">
+            <i class="fas fa-sun"></i>
+            Suno AI
+          </a>
+          <a href="https://soundraw.io/" target="_blank" class="bookmark-item">
+            <i class="fas fa-compact-disc"></i>
+            Soundraw
+          </a>
+          <a href="https://boomy.com/" target="_blank" class="bookmark-item">
+            <i class="fas fa-sliders-h"></i>
+            Boomy
+          </a>
+        </div>
+
+        <!-- Audio Editing Section -->
+        <div class="subcategory">
+          <h3><i class="fas fa-edit"></i> Audio Editing</h3>
+          <a href="https://podcast.adobe.com/enhance" target="_blank" class="bookmark-item">
+            <i class="fas fa-podcast"></i>
+            Adobe Podcast Enhance
+          </a>
+          <a href="https://krisp.ai/" target="_blank" class="bookmark-item">
+            <i class="fas fa-microphone-alt"></i>
+            Krisp Noise Cancellation
+          </a>
+          <a href="https://www.descript.com/" target="_blank" class="bookmark-item">
+            <i class="fas fa-wave-square"></i> <!-- Closest waveform icon -->
+            Descript
+          </a>
+        </div>
+
+        <!-- Video-to-Audio Section -->
+        <div class="subcategory">
+          <h3><i class="fas fa-film"></i> Video-to-Audio</h3>
+          <a href="https://app.pictory.ai/" target="_blank" class="bookmark-item">
+            <i class="fas fa-video"></i>
+            Pictory
+          </a>
+          <a href="https://www.lovo.ai/" target="_blank" class="bookmark-item">
+            <i class="fas fa-closed-captioning"></i>
+            LOVO AI
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="category">
+      <h2><i class="fas fa-video"></i> Free Video</h2>
+      <div class="bookmark-list">
+        <a href="https://www.pexels.com/videos/" target="_blank" class="bookmark-item">
+          <i class="fas fa-film"></i>
+          Pexels
+        </a>
+        <a href="https://app.pictory.ai/v2/home" target="_blank" class="bookmark-item">
+          <i class="fas fa-photo-video"></i>
+          Pictory
+        </a>
+        <a href="https://stability.ai/" target="_blank" class="bookmark-item">
+          <i class="fas fa-cube"></i>
+          Stability
+        </a>
+      </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="container" id="content-container" style="display: none;">
-        <button class="logout-button" onclick="handleLogout()">
-            <i class="fas fa-sign-out-alt"></i>
-        </button>
-        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-        
-        <h1>Bookmarks</h1>
-
-        <div class="category">
-            <h2><i class="fas fa-share-alt"></i> Social Networks</h2>
-            <div class="bookmark-list">
-                <a href="https://www.youtube.com/" target="_blank" class="bookmark-item">
-                    <i class="fab fa-youtube"></i>
-                    YouTube
-                </a>
-                <a href="https://www.facebook.com/" target="_blank" class="bookmark-item">
-                    <i class="fab fa-facebook"></i>
-                    Facebook
-                </a>
-                <a href="https://x.com/home" target="_blank" class="bookmark-item">
-                    <i class="fab fa-twitter"></i>
-                    Twitter/X
-                </a>
-                <a href="https://www.linkedin.com/feed/" target="_blank" class="bookmark-item">
-                    <i class="fab fa-linkedin"></i>
-                    LinkedIn
-                </a>
-                <a href="https://www.instagram.com/" target="_blank" class="bookmark-item">
-                    <i class="fab fa-instagram"></i>
-                    Instagram
-                </a>
-                <a href="https://www.threads.net/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-comment"></i>
-                    Threads
-                </a>
-                <a href="https://www.snapchat.com/" target="_blank" class="bookmark-item">
-                    <i class="fab fa-snapchat"></i>
-                    Snapchat
-                </a>
-                <a href="https://www.pinterest.com/" target="_blank" class="bookmark-item">
-                    <i class="fab fa-pinterest"></i>
-                    Pinterest
-                </a>
-                <a href="https://github.com/" target="_blank" class="bookmark-item">
-                    <i class="fab fa-github"></i>
-                    Github
-                </a>
-            </div>
-        </div>
-        <div class="category">
-            <h2><i class="fas fa-chart-line"></i> Trading Platforms</h2>
-            <div class="bookmark-list">
-                <a href="https://www.tradingview.com/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-chart-line"></i>
-                    TradingView
-                </a>
-                <a href="https://www.tickertape.in/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-scroll"></i>
-                    Tickertape
-                </a>
-                <a href="https://trendlyne.com/features/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-chart-line"></i>
-                    Trendlyne
-                </a>
-                <a href="https://www.moneycontrol.com/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-money-bill-wave"></i>
-                    Moneycontrol
-                </a>
-                <a href="https://chartink.com/screener/chart-link" target="_blank" class="bookmark-item">
-                    <i class="fas fa-chart-area"></i>
-                    Chartink
-                </a>
-                <a href="https://sensibull.com/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-bullseye"></i>
-                    Sensibull
-                </a>
-                <a href="https://www.screener.in/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-search-dollar"></i>
-                    Screener
-                </a>
-                <a href="https://zerodha.com/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-rupee-sign"></i>
-                    Zerodha
-                </a>
-                <a href="https://www.upstox.com/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-arrow-trend-up"></i>
-                    Upstox
-                </a>
-            </div>
-        </div>
-        <div class="category">
-            <h2><i class="fas fa-robot"></i> Chat Bots</h2> <!-- Changed icon -->
-            <div class="bookmark-list">
-                <!-- Alphabetized items and fixed icons -->
-                <!-- ChatGPT -->
-                <a href="https://chatgpt.com/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-comment"></i>
-                    ChatGPT
-                </a>
-
-                <!-- Deepseek -->
-                <a href="https://chat.deepseek.com/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-brain"></i> <!-- Semantic AI icon -->
-                    deepseek
-                </a>
-
-                <!-- Google Gemini -->
-                <a href="https://gemini.google.com/" target="_blank" class="bookmark-item">
-                    <i class="fab fa-google"></i> <!-- Official Google icon -->
-                    Gemini
-                </a>
-
-                <!-- Meta AI -->
-                <a href="https://www.meta.ai/" target="_blank" class="bookmark-item">
-                    <i class="fab fa-meta"></i> <!-- Official Meta icon -->
-                    Meta AI
-                </a>
-
-                <!-- Grok -->
-                <a href="https://x.com/i/grok" target="_blank" class="bookmark-item">
-                    <i class="fas fa-robot"></i> <!-- Generic AI icon -->
-                    Grok
-                </a>
-
-                <!-- QwenLM -->
-                <a href="https://chat.qwenlm.ai/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-microchip"></i> <!-- Represents LLM -->
-                    QwenLM
-                </a>
-
-                <!-- Perplexity -->
-                <a href="https://www.perplexity.ai/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-question-circle"></i> <!-- Question mark -->
-                    Perplexity
-                </a>
-
-                <!-- Microsoft Copilot -->
-                <a href="https://copilot.microsoft.com/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-rocket"></i> <!-- Launch/assistance icon -->
-                    Copilot
-                </a>
-
-                <!-- GitHub Copilot -->
-                <a href="https://github.com/copilot" target="_blank" class="bookmark-item">
-                    <i class="fab fa-github"></i> <!-- Official GitHub icon -->
-                    GitHub Copilot
-                </a>
-
-                <!-- Leo AI -->
-                <a href="https://app.getleo.ai/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-paw"></i> <!-- Leo = lion paw -->
-                    Leo
-                </a>
-
-                <!-- Toolify -->
-                <a href="https://www.toolify.ai/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-tools"></i> <!-- Tools icon -->
-                    Toolify
-                </a>
-
-                <!-- Google AI Studio -->
-                <a href="https://aistudio.google.com" target="_blank" class="bookmark-item">
-                    <i class="fas fa-flask"></i> <!-- Experimentation icon -->
-                    AI Studio
-                </a>
-            </div>
-        </div>
-        <div class="category">
-            <h2><i class="fas fa-globe"></i> AI Websites & Tools</h2>
-            <div class="bookmark-list">
-                <!-- AI UI Generation -->
-                <a href="https://v0.dev/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-wand-magic-sparkles"></i> <!-- More specific magic wand -->
-                    V0 (AI UI Generator)
-                </a>
-
-                <!-- Coding -->
-                <a href="https://replit.com/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-laptop-code"></i> <!-- Direct coding representation -->
-                    Replit (AI Coding)
-                </a>
-
-                <!-- Art Generation -->
-                <a href="https://www.midjourney.com/" target="_blank" target="_blank" class="bookmark-item">
-                    <i class="fas fa-paint-brush"></i>
-                    Midjourney (AI Art)
-                </a>
-
-                <!-- Video Tools -->
-                <a href="https://runwayml.com/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-video"></i> <!-- Clear video symbol -->
-                    Runway (AI Video)
-                </a>
-
-                <!-- Image Creation -->
-                <a href="https://www.bing.com/create" target="_blank" class="bookmark-item">
-                    <i class="fas fa-images"></i> <!-- Multiple images -->
-                    Bing Image Creator
-                </a>
-
-                <!-- AI Platform -->
-                <a href="https://leonardo.ai/" target="_blank" target="_blank" class="bookmark-item">
-                    <i class="fas fa-robot"></i>
-                    Leonardo AI
-                </a>
-
-                <!-- Photo Editing -->
-                <a href="https://www.photoroom.com/ai" target="_blank" class="bookmark-item">
-                    <i class="fas fa-camera-retro"></i> <!-- Camera + retro = editing -->
-                    PhotoRoom AI
-                </a>
-
-                <!-- Design Tools -->
-                <a href="https://www.canva.com/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-swatchbook"></i> <!-- Color swatches -->
-                    Canva AI Tools
-                </a>
-            </div>
-        </div>
-        <div class="category">
-            <h2><i class="fas fa-music"></i> AI Audio Tools</h2>
-            <div class="bookmark-list">
-                <!-- Text-to-Speech Section -->
-                <div class="subcategory">
-                    <h3><i class="fas fa-comment"></i> Text-to-Speech</h3>
-                    <a href="https://elevenlabs.io/" target="_blank" class="bookmark-item">
-                        <i class="fas fa-robot"></i>
-                        ElevenLabs
-                    </a>
-                    <a href="https://play.ht/" target="_blank" class="bookmark-item">
-                        <i class="fas fa-headphones"></i>
-                        PlayHT
-                    </a>
-                    <a href="https://www.resemble.ai/" target="_blank" class="bookmark-item">
-                        <i class="fas fa-microphone-alt"></i> <!-- Voice recording icon -->
-                        Resemble AI
-                    </a>
-                </div>
-
-                <!-- Music Generation Section -->
-                <div class="subcategory">
-                    <h3><i class="fas fa-music"></i> Music Generation</h3>
-                    <a href="https://suno.com/" target="_blank" class="bookmark-item">
-                        <i class="fas fa-sun"></i>
-                        Suno AI
-                    </a>
-                    <a href="https://soundraw.io/" target="_blank" class="bookmark-item">
-                        <i class="fas fa-compact-disc"></i>
-                        Soundraw
-                    </a>
-                    <a href="https://boomy.com/" target="_blank" class="bookmark-item">
-                        <i class="fas fa-sliders-h"></i>
-                        Boomy
-                    </a>
-                </div>
-
-                <!-- Audio Editing Section -->
-                <div class="subcategory">
-                    <h3><i class="fas fa-edit"></i> Audio Editing</h3>
-                    <a href="https://podcast.adobe.com/enhance" target="_blank" class="bookmark-item">
-                        <i class="fas fa-podcast"></i>
-                        Adobe Podcast Enhance
-                    </a>
-                    <a href="https://krisp.ai/" target="_blank" class="bookmark-item">
-                        <i class="fas fa-microphone-alt"></i>
-                        Krisp Noise Cancellation
-                    </a>
-                    <a href="https://www.descript.com/" target="_blank" class="bookmark-item">
-                        <i class="fas fa-wave-square"></i> <!-- Closest waveform icon -->
-                        Descript
-                    </a>
-                </div>
-
-                <!-- Video-to-Audio Section -->
-                <div class="subcategory">
-                    <h3><i class="fas fa-film"></i> Video-to-Audio</h3>
-                    <a href="https://app.pictory.ai/" target="_blank" class="bookmark-item">
-                        <i class="fas fa-video"></i>
-                        Pictory
-                    </a>
-                    <a href="https://www.lovo.ai/" target="_blank" class="bookmark-item">
-                        <i class="fas fa-closed-captioning"></i>
-                        LOVO AI
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="category">
-            <h2><i class="fas fa-video"></i> Free Video</h2>
-            <div class="bookmark-list">
-                <a href="https://www.pexels.com/videos/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-film"></i>
-                    Pexels
-                </a>
-                <a href="https://app.pictory.ai/v2/home" target="_blank" class="bookmark-item">
-                    <i class="fas fa-photo-video"></i>
-                    Pictory
-                </a>
-                <a href="https://stability.ai/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-cube"></i>
-                    Stability
-                </a>
-            </div>
-        </div>
-
-        <div class="category">
-            <h2><i class="fas fa-tools"></i> Other Tools</h2>
-            <div class="bookmark-list">
-                <a href="https://www.asciiart.eu/image-to-ascii" target="_blank" class="bookmark-item">
-                    <i class="fas fa-image"></i>
-                    Image-to-ASCII
-                </a>
-                <a href="https://temp-mail.org/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-envelope"></i>
-                    Temp Mail
-                </a>
-                <a href="https://huggingface.co/spaces/deepseek-ai/Janus-Pro-7B" target="_blank"
-                    class="bookmark-item">
-                    <i class="fas fa-robot"></i> <!-- Standard AI icon -->
-                    Janus-Pro-7B
-                </a>
-                <a href="https://app.quadratichq.com/file/60b3bb14-c87a-4a6f-9a53-15efb5a150dc" target="_blank"
-                    class="bookmark-item">
-                    <i class="fas fa-table"></i>
-                    Quadratic Excel Sheet
-                </a>
-                <a href="https://www.photoroom.com/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-eraser"></i>
-                    Object Remover
-                </a>
-                <a href="https://www.virustotal.com/gui/home/upload" target="_blank" class="bookmark-item">
-                    <i class="fas fa-shield-virus"></i>
-                    VirusTotal
-                </a>
-                <a href="https://haveibeenpwned.com/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-lock"></i>
-                    Have I Been Pwned
-                </a>
-                <a href="https://morsecode.world/international/translator.html" target="_blank"
-                    class="bookmark-item">
-                    <i class="fas fa-signal"></i>
-                    Morse Code
-                </a>
-                <a href="https://app.infography.in/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-chart-bar"></i>
-                    Infography
-                </a>
-                <a href="https://imgupscaler.com/" target="_blank" class="bookmark-item">
-                    <i class="fas fa-expand"></i>
-                    ImgUpscaler
-                </a>
-            </div>
-        </div>
-        <div class="category">
-            <h2><i class="fas fa-tools"></i>Mail</h2>
-            <div class="bookmark-list">
-                <a href="https://account.proton.me/mail" target="_blank" class="bookmark-item">
-                    <i class="fas fa-envelope"></i>
-                    P Mail
-                </a>
-            </div>
-        </div>
+    <div class="category">
+      <h2><i class="fas fa-tools"></i> Other Tools</h2>
+      <div class="bookmark-list">
+        <a href="https://www.asciiart.eu/image-to-ascii" target="_blank" class="bookmark-item">
+          <i class="fas fa-image"></i>
+          Image-to-ASCII
+        </a>
+        <a href="https://temp-mail.org/" target="_blank" class="bookmark-item">
+          <i class="fas fa-envelope"></i>
+          Temp Mail
+        </a>
+        <a href="https://huggingface.co/spaces/deepseek-ai/Janus-Pro-7B" target="_blank" class="bookmark-item">
+          <i class="fas fa-robot"></i> <!-- Standard AI icon -->
+          Janus-Pro-7B
+        </a>
+        <a href="https://app.quadratichq.com/file/60b3bb14-c87a-4a6f-9a53-15efb5a150dc" target="_blank"
+          class="bookmark-item">
+          <i class="fas fa-table"></i>
+          Quadratic Excel Sheet
+        </a>
+        <a href="https://www.photoroom.com/" target="_blank" class="bookmark-item">
+          <i class="fas fa-eraser"></i>
+          Object Remover
+        </a>
+        <a href="https://www.virustotal.com/gui/home/upload" target="_blank" class="bookmark-item">
+          <i class="fas fa-shield-virus"></i>
+          VirusTotal
+        </a>
+        <a href="https://haveibeenpwned.com/" target="_blank" class="bookmark-item">
+          <i class="fas fa-lock"></i>
+          Have I Been Pwned
+        </a>
+        <a href="https://morsecode.world/international/translator.html" target="_blank" class="bookmark-item">
+          <i class="fas fa-signal"></i>
+          Morse Code
+        </a>
+        <a href="https://app.infography.in/" target="_blank" class="bookmark-item">
+          <i class="fas fa-chart-bar"></i>
+          Infography
+        </a>
+        <a href="https://imgupscaler.com/" target="_blank" class="bookmark-item">
+          <i class="fas fa-expand"></i>
+          ImgUpscaler
+        </a>
+      </div>
     </div>
+    <div class="category">
+      <h2><i class="fas fa-tools"></i>Mail</h2>
+      <div class="bookmark-list">
+        <a href="https://account.proton.me/mail" target="_blank" class="bookmark-item">
+          <i class="fas fa-envelope"></i>
+          P Mail
+        </a>
+      </div>
+    </div>
+  </div>
 
-    <script>
-        // Configuration
-        const VALID_USERS = {
-            "king": "1331",
-            "lion": "1221"
-        };
+  <script src="script.js"></script>
 
-        // Theme Management
-        function toggleTheme() {
-            const body = document.body;
-            const currentTheme = body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        }
-
-        // Authentication System
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const errorElement = document.getElementById('login-error');
-
-            if (VALID_USERS[username] && VALID_USERS[username] === password) {
-                localStorage.setItem('isAuthenticated', 'true');
-                document.getElementById('auth-container').remove();
-                document.getElementById('content-container').style.display = 'block';
-            } else {
-                errorElement.style.display = 'flex';
-                setTimeout(() => errorElement.style.display = 'none', 2000);
-                document.getElementById('password').value = '';
-            }
-        });
-
-        // Logout Functionality
-        function handleLogout() {
-            localStorage.removeItem('isAuthenticated');
-            window.location.reload();
-        }
-
-        // Initialization
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set theme
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.body.setAttribute('data-theme', savedTheme);
-
-            // Check authentication
-            if (localStorage.getItem('isAuthenticated')) {
-                document.getElementById('auth-container').remove();
-                document.getElementById('content-container').style.display = 'block';
-            }
-        });
-    </script>
 </body>
 
 </html>
